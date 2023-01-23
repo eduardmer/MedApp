@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MedApp</string>
+
+    <string name="username_or_email">Username or email address</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="credentials_not_valid">Credentials are not valid.</string>
 </resources>
