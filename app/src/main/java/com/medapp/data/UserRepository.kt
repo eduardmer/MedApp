@@ -1,11 +1,11 @@
 package com.medapp.data
 
-import com.medapp.common.Status
+import com.medapp.model.UserStatus
 import kotlinx.coroutines.flow.Flow
 
-interface Repository {
+interface UserRepository {
 
-    fun isLogged() : Flow<Status>
+    fun getUser() : Flow<UserStatus>
 
     suspend fun login(username: String)
 

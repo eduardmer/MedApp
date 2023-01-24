@@ -7,9 +7,17 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.medapp.ui.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.medapp.ui.LoginFragment"
         android:label="LoginFragment" />
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.medapp.ui.DetailsFragment"
+        android:label="DetailsFragment" />
 </navigation>

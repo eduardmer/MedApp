@@ -3,6 +3,7 @@ package com.medapp.di
 import android.content.Context
 import androidx.room.Room
 import com.medapp.data.local.database.AppDatabase
+import com.medapp.data.local.database.MedicineDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +19,12 @@ class DatabaseModule {
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context) : AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.DB_NAME).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMedicineDao(database: AppDatabase) : MedicineDao {
+        return database.medicineDao()
     }
 
 }

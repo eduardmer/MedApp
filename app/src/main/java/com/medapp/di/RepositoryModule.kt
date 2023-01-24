@@ -1,17 +1,23 @@
 package com.medapp.di
 
-import com.medapp.data.Repository
-import com.medapp.data.RepositoryImpl
+import com.medapp.data.MedicineRepository
+import com.medapp.data.MedicineRepositoryImpl
+import com.medapp.data.UserRepository
+import com.medapp.data.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindRepository(repositoryImpl: RepositoryImpl): Repository
+    abstract fun bindMedicineRepository(medicineRepositoryImpl: MedicineRepositoryImpl): MedicineRepository
+
+    @Binds
+    abstract fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
 
 }
