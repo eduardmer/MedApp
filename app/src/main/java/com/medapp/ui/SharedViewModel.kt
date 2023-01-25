@@ -28,4 +28,10 @@ class SharedViewModel @Inject constructor(private val userRepository: UserReposi
         }
     }
 
+    fun logout() {
+        viewModelScope.launch {
+            userRepository.logout()
+        }
+    }
+
 }

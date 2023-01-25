@@ -7,4 +7,8 @@ interface MedicineRepository {
 
     fun getAllMedicines() : Flow<List<MedicineEntity>>
 
+    suspend fun insertAllMedicines(medicines: List<MedicineEntity>)
+
+    suspend fun deleteAll()
+
 }

@@ -1,7 +1,6 @@
 package com.medapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +41,7 @@ class LoginFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isLogged.collect {
                     if (it.isLogged)
-                        findNavController().popBackStack()
+                        findNavController().navigate(R.id.action_login)
                 }
             }
         }

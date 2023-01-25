@@ -9,4 +9,6 @@ interface UserRepository {
 
     suspend fun login(username: String)
 
+    suspend fun logout()
+
 }

@@ -1,12 +1,11 @@
 package com.medapp.ui
 
 import android.os.Bundle
+import android.view.*
 import com.medapp.model.Result
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.medapp.R
+import com.medapp.common.showGreetings
 import com.medapp.data.local.database.MedicineEntity
 import com.medapp.databinding.FragmentProfileBinding
 import com.medapp.ui.adapter.MedicinesAdapter
@@ -35,6 +35,7 @@ class ProfileFragment : Fragment(), MedicinesAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showMenu()
         val adapter = MedicinesAdapter(requireContext(), this)
         binding.recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
@@ -44,7 +45,7 @@ class ProfileFragment : Fragment(), MedicinesAdapter.OnItemClickListener {
                     when (it) {
                         is Result.Success -> {
                             adapter.submitList(it.medicines)
-                            binding.textView.text = it.username
+                            binding.greetingsText.showGreetings(it.username)
                             showProgressBar(false)
                         }
                         is Result.Error -> {
@@ -52,11 +53,29 @@ class ProfileFragment : Fragment(), MedicinesAdapter.OnItemClickListener {
                             showProgressBar(false)
                         }
                         is Result.Loading -> showProgressBar(true)
-                        is Result.NotLogged -> findNavController().navigate(R.id.loginFragment)
+                        is Result.NotLogged -> findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
                     }
                 }
             }
         }
+    }
+
+    private fun showMenu() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.logout -> {
+                        viewModel.logout()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun showProgressBar(isVisible: Boolean) {

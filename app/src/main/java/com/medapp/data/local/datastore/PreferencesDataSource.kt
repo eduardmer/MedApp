@@ -27,4 +27,10 @@ class PreferencesDataSource @Inject constructor(private val dataStore: DataStore
         }
     }
 
+    suspend fun logout() {
+        dataStore.edit {
+            it.clear()
+        }
+    }
+
 }
