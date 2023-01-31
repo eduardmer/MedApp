@@ -5,7 +5,6 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.medapp.data.local.database.MedicineDao
-import com.medapp.data.local.database.MedicineEntity
 import com.medapp.data.remote.ApiService
 import com.medapp.data.remote.model.toMedicineEntity
 import dagger.assisted.Assisted
@@ -20,33 +19,15 @@ class SyncWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val response = service.getMedicines()
-        val medicinesList = mutableListOf<MedicineEntity>()
-        response.problems.forEach { problem ->
-            problem.diabetes.forEach { diabete ->
-                diabete.medications.forEach { medication ->
-                    medication.medicationsClasses.forEach { medicationsClass ->
-                        medicationsClass.className.forEach { className ->
-                            className.associatedDrug.forEach { associatedDrug ->
-                                medicinesList.add(associatedDrug.toMedicineEntity())
-                            }
-                            className.associatedDrug2.forEach { associatedDrug ->
-                                medicinesList.add(associatedDrug.toMedicineEntity())
-                            }
-                        }
-                        medicationsClass.className2.forEach { className ->
-                            className.associatedDrug.forEach { associatedDrug ->
-                                medicinesList.add(associatedDrug.toMedicineEntity())
-                            }
-                            className.associatedDrug2.forEach { associatedDrug ->
-                                medicinesList.add(associatedDrug.toMedicineEntity())
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        val medicineEntities = response.problems
+            .flatMap { it.diabetes }
+            .flatMap { it.medications }
+            .flatMap { it.medicationsClasses }
+            .flatMap { listOf(it.className, it.className2).flatten() }
+            .flatMap { listOf(it.associatedDrug, it.associatedDrug2).flatten() }
+            .map { it.toMedicineEntity() }
         medicineDao.deleteAll()
-        medicineDao.insertAllMedicines(medicinesList)
+        medicineDao.insertAllMedicines(medicineEntities)
         return Result.success()
     }
 
